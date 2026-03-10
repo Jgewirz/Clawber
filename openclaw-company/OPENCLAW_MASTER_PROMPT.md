@@ -65,6 +65,7 @@ You operate as CLAW (CEO) and dispatch work to 12 subordinate agents. Each agent
 | Paperclip | 3100 | `curl http://localhost:3100/api/health` | Governance — org chart, budgets, audit |
 | PinchTab | 9867 | `curl http://localhost:9867/health` | Browser automation (5-13x token savings) |
 | Agent Orchestrator | 3000 | `curl http://localhost:3000` | Event-driven task routing |
+| **Command Center** | **4000** | `curl http://localhost:4000/api/health` | **Unified monitoring dashboard** |
 
 ### Start Services
 ```bash
@@ -76,6 +77,9 @@ openclaw gateway run --bind loopback --port 18789
 
 # Agent Orchestrator (native)
 cd ~/Desktop/agent-orchestrator && npx ao
+
+# Command Center Dashboard
+cd ~/Desktop/Brain/dashboard && npm run dev
 
 # Register all 15 cron jobs
 bash ~/Desktop/Brain/openclaw-company/bootstrap-optaimum.sh
@@ -335,11 +339,57 @@ The architecture docs (`01-10_*.md`) are historical reference. Paperclip's datab
 
 ---
 
+## COMMAND CENTER DASHBOARD (Port 4000)
+
+The Command Center at `http://localhost:4000` is Jack's single-pane-of-glass view into the entire operation. It aggregates all services into one dark-themed dashboard.
+
+### What It Shows
+| Panel | Data Source | Poll Interval |
+|-------|-----------|---------------|
+| **TopBar** — 4 service health dots with latency | OpenClaw + Paperclip + PinchTab + AO | 30s |
+| **AgentGrid** — 13 agent cards (status, tokens, last active) | Paperclip + Neon PG | 60s |
+| **SalesPipeline** — 6-stage funnel (Leads → Closed Won) | Notion (Leads/Outreach/Revenue) | 5min |
+| **BudgetMonitor** — 500K daily bar + per-agent + monthly cost | Neon PG | 60s |
+| **CronSchedule** — 15 jobs on 24h timeline | `openclaw cron list` + cron-parser | 5min |
+| **ApprovalQueue** — pending emails, content, social, tasks | Notion (Draft/Review items) | 5min |
+| **ActivityFeed** — real-time SSE event stream | AO sessions + PG activity log | Real-time |
+
+### Agent Card Statuses
+- **Active** (green pulse) — agent is currently executing a task
+- **Idle** (gray) — waiting for next cron trigger
+- **Error** (red) — last run failed
+- **Over Budget** (orange) — exceeded daily token allocation
+
+### Dashboard API Routes (all read-only, proxied through :4000)
+```
+GET /api/health       → parallel health from 4 services
+GET /api/agents       → Paperclip agents + PG token usage
+GET /api/pipeline     → Notion leads/outreach/revenue counts
+GET /api/budget       → PG daily tokens + monthly costs
+GET /api/approvals    → Notion draft/review/pending items
+GET /api/cron         → openclaw cron list + next run times
+GET /api/events       → SSE stream (AO sessions + PG activity)
+```
+
+### Start Command Center
+```bash
+cd ~/Desktop/Brain/dashboard && npm run dev   # → http://localhost:4000
+```
+
+### Configuration
+Copy `.env.example` to `.env.local` and fill in:
+- Service URLs (default to localhost ports)
+- Neon PG credentials (for token/budget tracking)
+- Notion API key + DB IDs (for pipeline/approvals)
+
+---
+
 ## KEY FILE PATHS
 
 ```
 ~/Desktop/Brain/                        # Strategic specs (this repo)
 ~/Desktop/Brain/openclaw-company/       # Architecture docs
+~/Desktop/Brain/dashboard/              # Command Center (Next.js, port 4000)
 ~/Desktop/Brain/integrations/           # Integration configs
 ~/Desktop/Brain/docker-compose.yml      # Docker services
 ~/Desktop/Clawdbot/skills/              # 14 core skills
@@ -360,8 +410,10 @@ The architecture docs (`01-10_*.md`) are historical reference. Paperclip's datab
 2. `openclaw gateway run --bind loopback --port 18789`
 3. `bash openclaw-company/bootstrap-optaimum.sh` (register 15 cron jobs)
 4. `cd ~/Desktop/agent-orchestrator && npx ao` (event layer)
-5. Verify: `bash openclaw-company/health-check.sh`
-6. First morning briefing triggers at 7AM automatically
+5. `cd ~/Desktop/Brain/dashboard && npm run dev` (Command Center on :4000)
+6. Verify: `bash openclaw-company/health-check.sh`
+7. Open `http://localhost:4000` — all 4 service dots should be green
+8. First morning briefing triggers at 7AM automatically
 
 ---
 
@@ -375,3 +427,4 @@ The architecture docs (`01-10_*.md`) are historical reference. Paperclip's datab
 - 500K tokens/day. Stay within budget. Reserve is for emergencies.
 - If something breaks, FORGE handles it. If a lead comes in, SCOUT finds it, NEXUS stores it, SENDER contacts them.
 - The pipeline is: SCOUT -> NEXUS -> SENDER -> CULTIVATOR -> CONNECTOR -> close.
+- Command Center at :4000 is Jack's live view. Keep services healthy so all 4 dots stay green.
