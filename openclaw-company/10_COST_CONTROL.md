@@ -255,33 +255,57 @@ IF daily token budget hits 90%:
 
 ---
 
+## Integration Token Impact
+
+The 6-repository integration changes the token budget:
+
+| Integration | Daily Token Change | Notes |
+|------------|-------------------|-------|
+| Paperclip | +5K-10K | Heartbeat webhook processing |
+| PinchTab | **-20K to -40K (savings)** | 800 vs 5,000+ tokens/page |
+| Agent Orchestrator | +5K-15K | Phase 0 webhook payloads |
+| PM Skills (65) | +10K-25K | Skill definitions in system prompts |
+| GEO/SEO Skills (11) | +5K-15K | Only on RANKER/SCRIBE active days |
+| Prompts.chat | +1K-3K | On-demand MCP calls |
+| **Net** | **+5K to +15K/day** | **3-9% of 175K reserve pool** |
+
+The reserve pool (175K tokens) absorbs the net increase comfortably. PinchTab's browser token savings partially offset the new skill loading costs.
+
+---
+
 ## Cost Reduction Tactics
 
 ### Immediate (Week 1)
 
-1. **Use Haiku for simple tasks.** SENTINEL health checks, NEXUS data syncs, and HERALD social post drafts don't need Sonnet-level intelligence.
+1. **Use PinchTab instead of Playwright screenshots.** 5-13x token savings on all browser operations.
+   - Savings: ~20K-40K tokens/day
+
+2. **Use Haiku for simple tasks.** SENTINEL health checks, NEXUS data syncs, and HERALD social post drafts don't need Sonnet-level intelligence.
    - Savings: ~50% on those agents' token costs
 
-2. **Cache Notion reads.** Don't query the same database multiple times per hour.
+3. **Cache Notion reads.** Don't query the same database multiple times per hour.
    - Savings: ~20% reduction in NEXUS tokens
 
-3. **Batch operations.** SCOUT should find 10 leads per session, not 1.
+4. **Batch operations.** SCOUT should find 10 leads per session, not 1.
    - Savings: ~60% reduction in SCOUT overhead tokens
 
 ### Medium-term (Month 1-2)
 
-4. **Build custom Notion query templates.** Pre-format queries so agents don't need to construct them from scratch.
+5. **Build custom Notion query templates.** Pre-format queries so agents don't need to construct them from scratch.
    - Savings: ~30% reduction in query construction tokens
 
-5. **Store agent outputs in PostgreSQL, not just Notion.** PostgreSQL queries are cheaper than Notion API calls.
+6. **Store agent outputs in PostgreSQL, not just Notion.** PostgreSQL queries are cheaper than Notion API calls.
    - Savings: Reduced API calls, faster data access
+
+7. **Use Paperclip budget enforcement.** Move from soft prompt-based limits to Paperclip's hard budget gates.
+   - Savings: Prevents budget overruns, enforces daily caps
 
 ### Long-term (Month 3+)
 
-6. **Train specialized fine-tuned models.** For repetitive tasks (email personalization, lead scoring), a fine-tuned smaller model could replace Sonnet.
+8. **Train specialized fine-tuned models.** For repetitive tasks (email personalization, lead scoring), a fine-tuned smaller model could replace Sonnet.
    - Savings: ~80% on those specific tasks
 
-7. **Implement RAG over past agent outputs.** Agents learn from previous successful patterns instead of reasoning from scratch.
+9. **Implement RAG over past agent outputs.** Agents learn from previous successful patterns instead of reasoning from scratch.
    - Savings: ~30% reduction in research tokens
 
 ---

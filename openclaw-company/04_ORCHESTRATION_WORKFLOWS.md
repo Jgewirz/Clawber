@@ -2,11 +2,56 @@
 
 ## How Agents Coordinate
 
-OpenClaw provides two native orchestration primitives:
-1. **Cron jobs** — time-based triggers (`openclaw cron add`)
-2. **Heartbeats** — event-driven agent wakeups
+OptAImum uses **two orchestration layers** that complement each other:
 
-All agent orchestration uses these two mechanisms. No external orchestrator needed.
+### Layer 1: Cron (Time-Based) — OpenClaw Native
+
+15 cron jobs handle scheduled, predictable work:
+- `openclaw cron add` registers jobs
+- Gateway fires jobs on schedule
+- Each job runs in an isolated session
+
+### Layer 2: Agent Orchestrator (Event-Driven) — AO
+
+Agent Orchestrator handles reactive, event-driven work:
+- Webhook events trigger agent sessions
+- Escalation logic routes errors to the right agent
+- CI/PR failures auto-retry before escalating
+
+### When to Use Each
+
+| Use Cron When... | Use Agent Orchestrator When... |
+|-----------------|-------------------------------|
+| Fixed schedule (7AM briefing) | Reacting to an event (lead replied) |
+| No external trigger needed | Triggered by webhook/API call |
+| Predictable workload | Variable/burst workload |
+| Simple fire-and-forget | Need retry/escalation logic |
+
+### AO Setup
+
+AO runs natively on the host (port 3000). See `integrations/agent-orchestrator/README.md` for setup.
+
+OpenClaw gateway config to accept AO webhooks:
+```json
+{
+  "hooks": {
+    "enabled": true,
+    "token": "<OPENCLAW_HOOKS_TOKEN>",
+    "allowRequestSessionKey": true,
+    "allowedSessionKeyPrefixes": ["hook:ao:"]
+  }
+}
+```
+
+### AO Event Routing
+
+| Event | AO Action | Target Agent |
+|-------|-----------|-------------|
+| High-score lead found | Create session | NEXUS -> SENDER |
+| Cold email reply | Create session | CONNECTOR |
+| System error | Escalate | FORGE |
+| Content approved | Notify | HERALD |
+| Campaign performance drop | Alert | AMPLIFY |
 
 ---
 

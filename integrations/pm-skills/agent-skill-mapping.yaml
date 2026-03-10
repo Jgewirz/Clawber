@@ -1,0 +1,63 @@
+# PM Skills -> Agent Assignment Mapping
+# Maps the 65 pm-skills to OptAImum agents
+
+agents:
+  COMPASS:
+    description: "Product manager agent - primary PM skills user"
+    plugins:
+      - pm-product-discovery
+      - pm-product-strategy
+      - pm-execution
+    key_skills:
+      - create-prd
+      - brainstorm-okrs
+      - outcome-roadmap
+      - sprint-plan
+      - prioritization-frameworks
+      - product-strategy
+      - product-vision
+      - brainstorm-ideas-existing
+      - opportunity-solution-tree
+
+  AMPLIFY:
+    description: "CMO agent - marketing and growth focused"
+    plugins:
+      - pm-marketing-growth
+      - pm-go-to-market
+    key_skills:
+      - marketing-ideas
+      - positioning-ideas
+      - north-star-metric
+      - gtm-strategy
+      - growth-loops
+      - gtm-motions
+
+  ORACLE:
+    description: "Research agent - market intelligence"
+    plugins:
+      - pm-market-research
+    key_skills:
+      - competitor-analysis
+      - market-sizing
+      - market-segments
+      - user-personas
+      - sentiment-analysis
+
+  CLAW:
+    description: "CEO agent - strategic decisions only"
+    plugins:
+      - pm-product-strategy  # Read-only strategic reference
+    key_skills:
+      - product-strategy
+      - swot-analysis
+      - ansoff-matrix
+
+  SCRIBE:
+    description: "Content agent - uses research outputs"
+    plugins: []
+    notes: "Uses ORACLE's market-research outputs, not pm-skills directly"
+
+  CULTIVATOR:
+    description: "Lead nurture - uses ICP for personalization"
+    plugins: []
+    notes: "References pm-go-to-market ICP outputs via Notion"

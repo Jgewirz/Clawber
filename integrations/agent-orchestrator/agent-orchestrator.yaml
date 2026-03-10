@@ -1,0 +1,63 @@
+# Agent Orchestrator config for OptAImum
+# Place at ~/Desktop/agent-orchestrator/agent-orchestrator.yaml
+
+dataDir: ~/.agent-orchestrator
+worktreeDir: ~/.worktrees
+port: 3000
+
+defaults:
+  runtime: process    # 'process' on Windows, 'tmux' on Linux
+  agent: claude-code
+  workspace: worktree
+  notifiers: [openclaw]
+
+notifiers:
+  openclaw:
+    plugin: openclaw
+    url: http://127.0.0.1:18789/hooks/agent
+    token: ${OPENCLAW_HOOKS_TOKEN}
+    name: AO
+    sessionKeyPrefix: "hook:ao:"
+    wakeMode: now
+    deliver: true
+
+projects:
+  optaimum:
+    repo: jgewi/Brain
+    path: ~/Desktop/Brain
+    defaultBranch: main
+    sessionPrefix: opt
+
+    agentConfig:
+      permissions: default
+
+    agentRules: |
+      You are working on OptAImum, an autonomous AI company stack.
+      Follow VOICE.md principles in all output.
+      All customer-facing content requires human approval.
+      Banned words: synergy, leverage, utilize, paradigm, holistic, ecosystem.
+
+reactions:
+  ci-failed:
+    auto: true
+    action: send-to-agent
+    retries: 2
+    escalateAfter: 2
+  changes-requested:
+    auto: true
+    action: send-to-agent
+    escalateAfter: 30m
+  approved-and-green:
+    auto: false
+    action: notify
+    priority: action
+  agent-stuck:
+    threshold: 10m
+    action: notify
+    priority: urgent
+
+notificationRouting:
+  urgent: [openclaw]
+  action: [openclaw]
+  warning: [openclaw]
+  info: [openclaw]

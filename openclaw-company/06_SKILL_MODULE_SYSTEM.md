@@ -27,7 +27,9 @@ OpenClaw skills are **modular capability packages** that agents load at runtime.
 
 ---
 
-## Installed Skills (14 from Clawdbot)
+## Installed Skills — 90 Total (14 Core + 65 PM + 11 GEO)
+
+### Core Skills (14 from Clawdbot)
 
 | Skill | Category | Agents That Use It |
 |-------|----------|-------------------|
@@ -46,135 +48,69 @@ OpenClaw skills are **modular capability packages** that agents load at runtime.
 | `shopify-admin-api` | E-commerce | CLAW (revenue monitoring) |
 | `calendar` | Operations | CLAW, COMPASS |
 
+### PM Skills (65 from phuryn/pm-skills) — See external skill packs section below
+
+### GEO/SEO Skills (11 from geo-seo-claude) — See external skill packs section below
+
 ---
 
-## New Skills to Build (Product Management Suite)
+## External Skill Packs (Replacing Custom Builds)
 
-Based on PM skills patterns, create these as OpenClaw skills:
+The 5 planned custom skills have been replaced by two external skill packs providing **76 proven community skills**:
 
-### `market-research` Skill
+### PM Skills (65 skills, 8 plugins) — `phuryn/pm-skills`
 
-```markdown
-# market-research
+Replaces all 5 planned custom skills with battle-tested alternatives:
 
-## Description
-Conduct structured market research using web search, competitor analysis, and trend identification.
+| Planned Skill | Replaced By | # Skills |
+|--------------|-------------|----------|
+| `market-research` | `pm-market-research` plugin | 7 |
+| `product-strategy` | `pm-product-strategy` plugin | 12 |
+| `growth-loop-design` | `pm-go-to-market` plugin | 6 |
+| `experimentation-design` | `pm-data-analytics` plugin | 3 |
+| `okr-planning` | `pm-execution` plugin | 15 |
+| (bonus) | `pm-product-discovery` plugin | 13 |
+| (bonus) | `pm-marketing-growth` plugin | 5 |
+| (bonus) | `pm-toolkit` plugin | 4 |
 
-## Tools
-- brave-search: Web research queries
-- notion: Store findings
-- memory-core: Track research history
+**Installation:** See `integrations/pm-skills/README.md`
 
-## Instructions
-When activated, follow this research framework:
-1. Define research question
-2. Search for primary data (Brave Search)
-3. Analyze competitor landscape
-4. Identify market trends
-5. Score opportunities (TAM/SAM/SOM)
-6. Output structured findings to Notion
+**Agent assignments:**
 
-## Output Format
-| Finding | Source | Impact | Confidence |
-|---------|--------|--------|------------|
-| [data]  | [url]  | H/M/L  | H/M/L      |
-```
+| Agent | PM Plugins |
+|-------|-----------|
+| COMPASS | pm-product-discovery, pm-product-strategy, pm-execution |
+| AMPLIFY | pm-marketing-growth, pm-go-to-market |
+| ORACLE | pm-market-research |
+| CLAW | pm-product-strategy (strategic reference) |
 
-### `product-strategy` Skill
+### GEO/SEO Skills (11 skills) — `zubair-trabzada/geo-seo-claude`
 
-```markdown
-# product-strategy
+New AI search optimization skills for RANKER and supporting agents:
 
-## Description
-Generate product strategy documents including positioning, differentiation, and roadmap recommendations.
+| Skill | Purpose |
+|-------|---------|
+| geo-audit | Full GEO + SEO audit orchestration |
+| geo-citability | AI citation readiness scoring |
+| geo-crawlers | AI crawler access analysis (14+ crawlers) |
+| geo-llmstxt | llms.txt standard analysis & generation |
+| geo-brand-mentions | Brand presence scanning |
+| geo-platform-optimizer | Platform-specific optimization (ChatGPT, Perplexity, AIO) |
+| geo-schema | Structured data (JSON-LD) detection & generation |
+| geo-technical | Technical SEO audit (Core Web Vitals, mobile, security) |
+| geo-content | Content quality & E-E-A-T assessment |
+| geo-report | Markdown report generation |
+| geo-report-pdf | PDF reports with charts & visualizations |
 
-## Instructions
-1. Analyze current product capabilities
-2. Map competitive landscape
-3. Identify differentiation opportunities
-4. Draft positioning statement
-5. Recommend roadmap priorities (RICE scoring)
-6. Output to Notion Tasks
+**Installation:** Requires Python 3.8+. See `integrations/geo-seo/README.md`
 
-## Frameworks
-- Jobs-to-be-Done analysis
-- RICE prioritization (Reach, Impact, Confidence, Effort)
-- Blue Ocean Strategy canvas
-- Value Proposition Canvas
-```
+**Agent assignments:**
 
-### `growth-loop-design` Skill
-
-```markdown
-# growth-loop-design
-
-## Description
-Design and analyze growth loops for sustainable user acquisition.
-
-## Instructions
-1. Map current acquisition channels
-2. Identify loop mechanics (viral, content, paid, sales-led)
-3. Model loop economics (CAC, LTV, payback period)
-4. Design experiments to test loop hypotheses
-5. Output experiment cards to Notion
-
-## Loop Types
-- Content Loop: Create -> Rank -> Traffic -> Leads -> Content ideas
-- Referral Loop: User -> Refers -> New user -> Refers
-- Sales Loop: Lead -> Close -> Case study -> More leads
-- Product Loop: Use -> Value -> Share -> New user
-```
-
-### `experimentation-design` Skill
-
-```markdown
-# experimentation-design
-
-## Description
-Design structured growth experiments with hypotheses, metrics, and success criteria.
-
-## Instructions
-1. State hypothesis clearly
-2. Define control and variant
-3. Set primary metric and minimum detectable effect
-4. Calculate required sample size
-5. Define success criteria
-6. Set experiment duration
-7. Output experiment card to Notion
-
-## Template
-Hypothesis: If we [change], then [metric] will [improve by X%]
-because [reasoning].
-Control: [current state]
-Variant: [proposed change]
-Primary Metric: [metric name]
-Success Threshold: [X% improvement]
-Duration: [N days/weeks]
-Sample Size: [N]
-```
-
-### `okr-planning` Skill
-
-```markdown
-# okr-planning
-
-## Description
-Generate quarterly OKRs aligned with company strategy.
-
-## Instructions
-1. Review current company goals (from CLAW)
-2. Assess previous quarter results
-3. Draft 3-5 objectives
-4. Define 2-3 key results per objective
-5. Assign ownership to agents/departments
-6. Output to Notion Tasks
-
-## Format
-Objective: [Bold, aspirational goal]
-  KR1: [Measurable result] - Owner: [Agent]
-  KR2: [Measurable result] - Owner: [Agent]
-  KR3: [Measurable result] - Owner: [Agent]
-```
+| Agent | GEO Skills |
+|-------|-----------|
+| RANKER (primary) | All 11 skills |
+| SCRIBE | geo-content, geo-citability |
+| ORACLE | geo-brand-mentions, geo-crawlers |
 
 ---
 

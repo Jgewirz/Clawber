@@ -1,0 +1,179 @@
+{
+  "company": {
+    "name": "OptAImum",
+    "description": "Autonomous AI company selling AI-powered sales optimization",
+    "tagline": "Stop Leaks. Start Scaling.",
+    "daily_token_budget": 500000,
+    "monthly_cost_target_cents": 26200
+  },
+  "agents": [
+    {
+      "name": "CLAW",
+      "role": "chief_executive",
+      "codename": "claw",
+      "reports_to": null,
+      "adapter_type": "openclaw_gateway",
+      "budget_monthly_cents": 4500,
+      "daily_token_limit": 50000,
+      "heartbeat": "0 7 * * *",
+      "session_type": "main",
+      "description": "CEO agent. Daily morning briefing, strategic decisions, priority setting."
+    },
+    {
+      "name": "FORGE",
+      "role": "chief_technology_officer",
+      "codename": "forge",
+      "reports_to": "CLAW",
+      "adapter_type": "openclaw_gateway",
+      "budget_monthly_cents": 2700,
+      "daily_token_limit": 30000,
+      "heartbeat": "0 8 * * *",
+      "session_type": "isolated",
+      "description": "CTO agent. System health, integration monitoring, manages NEXUS and SENTINEL."
+    },
+    {
+      "name": "AMPLIFY",
+      "role": "chief_marketing_officer",
+      "codename": "amplify",
+      "reports_to": "CLAW",
+      "adapter_type": "openclaw_gateway",
+      "budget_monthly_cents": 3600,
+      "daily_token_limit": 40000,
+      "heartbeat": "0 8 * * *",
+      "session_type": "isolated",
+      "description": "CMO agent. Coordinates SCOUT, SENDER, CULTIVATOR, CONNECTOR, RANKER, SCRIBE, HERALD."
+    },
+    {
+      "name": "SCOUT",
+      "role": "lead_intelligence",
+      "codename": "scout",
+      "reports_to": "AMPLIFY",
+      "adapter_type": "openclaw_gateway",
+      "budget_monthly_cents": 1800,
+      "daily_token_limit": 20000,
+      "heartbeat": "*/30 * * * *",
+      "session_type": "isolated",
+      "description": "Lead intelligence. Find, enrich, score leads. Uses Hunter.io, Apify, PinchTab."
+    },
+    {
+      "name": "SENDER",
+      "role": "cold_outreach",
+      "codename": "sender",
+      "reports_to": "AMPLIFY",
+      "adapter_type": "openclaw_gateway",
+      "budget_monthly_cents": 1350,
+      "daily_token_limit": 15000,
+      "heartbeat": "0 9,17 * * 1-5",
+      "session_type": "isolated",
+      "description": "Cold outreach via Instantly.ai. Drafts go to Notion for approval."
+    },
+    {
+      "name": "NEXUS",
+      "role": "crm_data_hub",
+      "codename": "nexus",
+      "reports_to": "FORGE",
+      "adapter_type": "openclaw_gateway",
+      "budget_monthly_cents": 2250,
+      "daily_token_limit": 25000,
+      "heartbeat": "0 * * * *",
+      "session_type": "isolated",
+      "description": "CRM and data sync. Only agent that writes to CRM. Notion <-> PostgreSQL."
+    },
+    {
+      "name": "CULTIVATOR",
+      "role": "lead_nurture",
+      "codename": "cultivator",
+      "reports_to": "AMPLIFY",
+      "adapter_type": "openclaw_gateway",
+      "budget_monthly_cents": 1350,
+      "daily_token_limit": 15000,
+      "heartbeat": "0 10 * * 1-5",
+      "session_type": "isolated",
+      "description": "Follow-up sequences. Day 3/7/14 cadence. All emails require approval."
+    },
+    {
+      "name": "CONNECTOR",
+      "role": "warm_outreach",
+      "codename": "connector",
+      "reports_to": "AMPLIFY",
+      "adapter_type": "openclaw_gateway",
+      "budget_monthly_cents": 900,
+      "daily_token_limit": 10000,
+      "heartbeat": null,
+      "session_type": "isolated",
+      "description": "Warm outreach. On-demand only (triggered by events). Referrals, inbound replies."
+    },
+    {
+      "name": "RANKER",
+      "role": "search_optimization",
+      "codename": "ranker",
+      "reports_to": "AMPLIFY",
+      "adapter_type": "openclaw_gateway",
+      "budget_monthly_cents": 1800,
+      "daily_token_limit": 20000,
+      "heartbeat": "0 10 * * 3",
+      "session_type": "isolated",
+      "description": "SEO and GEO optimization. Uses geo-seo skills + Brave Search + PinchTab."
+    },
+    {
+      "name": "SCRIBE",
+      "role": "content_creation",
+      "codename": "scribe",
+      "reports_to": "AMPLIFY",
+      "adapter_type": "openclaw_gateway",
+      "budget_monthly_cents": 2700,
+      "daily_token_limit": 30000,
+      "heartbeat": "0 8 * * 1,4",
+      "session_type": "isolated",
+      "description": "Content writer. Blog posts, case studies, landing pages. Uses VOICE.md."
+    },
+    {
+      "name": "HERALD",
+      "role": "social_media",
+      "codename": "herald",
+      "reports_to": "AMPLIFY",
+      "adapter_type": "openclaw_gateway",
+      "budget_monthly_cents": 1350,
+      "daily_token_limit": 15000,
+      "heartbeat": "0 8 * * 2,4",
+      "session_type": "isolated",
+      "description": "Social media. LinkedIn, Twitter/X, Instagram. All posts require approval."
+    },
+    {
+      "name": "ORACLE",
+      "role": "market_intelligence",
+      "codename": "oracle",
+      "reports_to": "AMPLIFY",
+      "adapter_type": "openclaw_gateway",
+      "budget_monthly_cents": 2250,
+      "daily_token_limit": 25000,
+      "heartbeat": "0 14 * * 1,4",
+      "session_type": "isolated",
+      "description": "Competitive intelligence. Uses geo-seo brand-mentions + PinchTab for monitoring."
+    },
+    {
+      "name": "COMPASS",
+      "role": "product_manager",
+      "codename": "compass",
+      "reports_to": "FORGE",
+      "adapter_type": "openclaw_gateway",
+      "budget_monthly_cents": 1800,
+      "daily_token_limit": 20000,
+      "heartbeat": "0 9 * * 1",
+      "session_type": "isolated",
+      "description": "Product roadmap. PRDs, OKRs, RICE scoring. Uses pm-skills."
+    },
+    {
+      "name": "SENTINEL",
+      "role": "operations_monitor",
+      "codename": "sentinel",
+      "reports_to": "FORGE",
+      "adapter_type": "openclaw_gateway",
+      "budget_monthly_cents": 900,
+      "daily_token_limit": 10000,
+      "heartbeat": "0 */6 * * *",
+      "session_type": "isolated",
+      "description": "System health monitor. Alerts on errors only. Logs to PostgreSQL."
+    }
+  ]
+}

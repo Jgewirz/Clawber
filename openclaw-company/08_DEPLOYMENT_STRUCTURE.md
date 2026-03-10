@@ -4,6 +4,7 @@
 
 ```
 C:\Users\jgewi\Desktop\
+│
 ├── Brain/                              # STRATEGIC LAYER (Agent Brains)
 │   ├── IDENTITY md ....md              # Claw identity
 │   ├── VOICE md ....md                 # Brand voice
@@ -22,23 +23,44 @@ C:\Users\jgewi\Desktop\
 │   ├── Cultivator ....md               # Cultivator agent spec
 │   ├── Connector ....md                # Connector agent spec
 │   ├── voice.txt                       # Quick voice reference
+│   ├── docker-compose.yml             # MASTER DOCKER COMPOSE
+│   ├── .env.example                   # Environment template
 │   │
-│   └── openclaw-company/              # THIS OUTPUT (Architecture Docs)
-│       ├── 01_SYSTEM_ARCHITECTURE.md
-│       ├── 02_AGENT_ORG_CHART.md
-│       ├── 03_AGENT_CONFIGS.md
-│       ├── 04_ORCHESTRATION_WORKFLOWS.md
-│       ├── 05_BROWSER_AUTOMATION.md
-│       ├── 06_SKILL_MODULE_SYSTEM.md
-│       ├── 07_MARKETING_ENGINE.md
-│       ├── 08_DEPLOYMENT_STRUCTURE.md
-│       ├── 09_SCALING_PLAN.md
-│       └── 10_COST_CONTROL.md
+│   ├── openclaw-company/              # Architecture Docs
+│   │   ├── 01_SYSTEM_ARCHITECTURE.md
+│   │   ├── 02_AGENT_ORG_CHART.md
+│   │   ├── 03_AGENT_CONFIGS.md
+│   │   ├── 04_ORCHESTRATION_WORKFLOWS.md
+│   │   ├── 05_BROWSER_AUTOMATION.md
+│   │   ├── 06_SKILL_MODULE_SYSTEM.md
+│   │   ├── 07_MARKETING_ENGINE.md
+│   │   ├── 08_DEPLOYMENT_STRUCTURE.md
+│   │   ├── 09_SCALING_PLAN.md
+│   │   └── 10_COST_CONTROL.md
+│   │
+│   └── integrations/                  # INTEGRATION CONFIGS
+│       ├── paperclip/                 # Governance control plane
+│       │   ├── README.md
+│       │   └── company-seed.json      # 13 agents, org hierarchy, budgets
+│       ├── agent-orchestrator/        # Event-driven orchestration
+│       │   ├── README.md
+│       │   ├── agent-orchestrator.yaml
+│       │   └── phase-mapping.md
+│       ├── pinchtab/                  # Browser automation
+│       │   └── README.md
+│       ├── pm-skills/                 # 65 PM skills
+│       │   ├── README.md
+│       │   └── agent-skill-mapping.yaml
+│       ├── geo-seo/                   # 11 GEO/SEO skills
+│       │   ├── README.md
+│       │   └── python-deps.txt
+│       └── prompts-chat/              # Prompt optimization
+│           └── README.md
 │
 ├── Clawdbot/                          # EXECUTION LAYER (Runtime)
 │   ├── .clawdhub/
 │   │   └── clawdbot.json              # MCP server configs
-│   ├── skills/                        # Installed skill modules
+│   ├── skills/                        # Installed skill modules (14 core)
 │   │   ├── agent-content-pipeline/
 │   │   ├── calendar/
 │   │   ├── clawpify/
@@ -53,51 +75,91 @@ C:\Users\jgewi\Desktop\
 │   │   ├── seo-competitor-analysis/
 │   │   ├── shopify-admin-api/
 │   │   └── twitter/
-│   ├── .env.example                   # Environment template
-│   ├── OPTAIMUM_AUTOMATION_SETUP.md   # Automation config guide
-│   └── Control Room ....md            # Symlink to Brain
+│   ├── .env.example
+│   ├── OPTAIMUM_AUTOMATION_SETUP.md
+│   └── Control Room ....md
 │
 ├── openclaw-extracted/                # INFRASTRUCTURE LAYER (OpenClaw Core)
 │   └── openclaw-main/
 │       ├── src/                       # Core gateway source
-│       │   ├── gateway/               # Gateway server
-│       │   ├── cron/                  # Cron scheduler
-│       │   ├── agents/                # Agent runtime
-│       │   ├── browser/               # Playwright browser
-│       │   ├── channels/              # Messaging channels
-│       │   ├── plugins/               # Plugin system
-│       │   ├── routing/               # Message routing
-│       │   └── ...
 │       ├── skills/                    # Bundled skills (60+)
 │       ├── extensions/                # Channel extensions (40+)
-│       ├── docs/                      # Full documentation
-│       ├── docker-compose.yml         # Docker deployment
-│       ├── render.yaml                # Render.com deployment
-│       ├── Dockerfile                 # Container build
+│       ├── docs/
+│       ├── docker-compose.yml
+│       ├── render.yaml
+│       ├── Dockerfile
 │       └── package.json               # v2026.2.27
 │
+│ === NEW INTEGRATION REPOSITORIES ===
+│
+├── paperclip/                         # GOVERNANCE LAYER
+│   ├── server/                        # Paperclip API server
+│   ├── doc/                           # OPENCLAW_ONBOARDING.md
+│   ├── Dockerfile
+│   └── package.json
+│
+├── agent-orchestrator/                # EVENT-DRIVEN ORCHESTRATION
+│   ├── packages/
+│   │   ├── cli/                       # 'ao' CLI
+│   │   ├── core/                      # Types, config, sessions
+│   │   ├── web/                       # Next.js dashboard
+│   │   └── plugins/                   # 15+ plugins (inc. notifier-openclaw)
+│   └── package.json
+│
+├── pinchtab/                          # BROWSER AUTOMATION
+│   ├── cmd/pinchtab/                  # Go binary source
+│   ├── plugin/                        # OpenClaw plugin
+│   ├── skill/pinchtab/                # Skill definition
+│   ├── Dockerfile
+│   └── docker-compose.yml
+│
+├── pm-skills/                         # 65 PM SKILLS (8 plugins)
+│   ├── pm-product-discovery/
+│   ├── pm-product-strategy/
+│   ├── pm-execution/
+│   ├── pm-market-research/
+│   ├── pm-data-analytics/
+│   ├── pm-go-to-market/
+│   ├── pm-marketing-growth/
+│   └── pm-toolkit/
+│
+├── geo-seo-claude/                    # 11 GEO/SEO SKILLS
+│   ├── geo/                           # Master orchestrator
+│   ├── skills/                        # 11 sub-skills
+│   ├── agents/                        # 5 parallel subagents
+│   ├── scripts/                       # Python utilities
+│   └── requirements.txt
+│
+├── prompts.chat/                      # PROMPT OPTIMIZATION
+│   └── (community prompt library + MCP server)
+│
 └── ~/.openclaw/                       # RUNTIME STATE (Auto-managed)
-    ├── config/                        # Gateway configuration
-    ├── credentials/                   # Encrypted credentials
-    ├── cron/                          # Persisted cron jobs
-    ├── sessions/                      # Agent session logs
-    ├── agents/                        # Per-agent state
-    │   ├── claw/
-    │   ├── forge/
-    │   ├── amplify/
-    │   ├── scout/
-    │   ├── sender/
-    │   ├── nexus/
-    │   ├── cultivator/
-    │   ├── connector/
-    │   ├── ranker/
-    │   ├── scribe/
-    │   ├── herald/
-    │   ├── oracle/
-    │   ├── compass/
-    │   └── sentinel/
-    └── workspace/                     # Shared workspace
+    ├── config/
+    ├── credentials/
+    ├── cron/
+    ├── sessions/
+    ├── agents/{claw,forge,...,sentinel}/
+    ├── plugins/pinchtab/              # PinchTab OpenClaw plugin
+    ├── skills/
+    │   ├── pm-skills -> ~/Desktop/pm-skills  # Symlink
+    │   ├── geo/                       # GEO orchestrator
+    │   ├── geo-audit/                 # GEO sub-skills
+    │   └── ...
+    └── workspace/
 ```
+
+---
+
+## Port Map
+
+| Port | Service | Type |
+|------|---------|------|
+| 3000 | Agent Orchestrator | Native (web dashboard) |
+| 3100 | Paperclip | Docker (governance UI + API) |
+| 5432 | postgres-superpower | Docker (existing) |
+| 5433 | paperclip-db | Docker (Paperclip Postgres) |
+| 9867 | PinchTab | Docker (browser automation) |
+| 18789 | OpenClaw Gateway | Native (agent runtime) |
 
 ---
 

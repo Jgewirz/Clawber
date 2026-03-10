@@ -1,8 +1,13 @@
 # OUTPUT 5 — BROWSER AUTOMATION STRUCTURE
 
-## OpenClaw Browser Integration
+## Browser Tools — Two Layers
 
-OpenClaw ships with **Playwright Core** built-in (`playwright-core` in package.json). Agents access browser automation through OpenClaw's native `browser` tool — no external PinchTab needed.
+Agents have access to two browser automation tools:
+
+1. **PinchTab** (primary) — Token-efficient HTTP API for text extraction and navigation. ~800 tokens/page vs ~5,000+ for screenshots. **5-13x token savings.**
+2. **Playwright Core** (fallback) — OpenClaw's built-in full browser for complex interactions, screenshots, and form submissions.
+
+**Decision rule:** Use PinchTab for reading/extracting web content. Use Playwright for interactions requiring visual context (screenshots, CAPTCHAs, complex forms).
 
 ---
 
@@ -11,19 +16,54 @@ OpenClaw ships with **Playwright Core** built-in (`playwright-core` in package.j
 ```
 [Agent (e.g., SCOUT)]
        |
-       | uses OpenClaw browser tool
-       v
-[OpenClaw Gateway]
+       +--- PinchTab (primary) -------> HTTP API (port 9867)
+       |    ~800 tokens/page                  |
+       |    text extraction, navigation       v
+       |                                [Headless Chrome in Docker]
        |
-       | Playwright Core
-       v
-[Chromium Browser Instance]
-       |
-       +---> Scrape competitor websites
-       +---> Fill forms (lead capture)
-       +---> Navigate SaaS platforms
-       +---> Extract data from pages
+       +--- Playwright (fallback) ----> OpenClaw Gateway
+            ~5,000+ tokens/page              |
+            screenshots, forms               v
+                                        [Chromium Browser Instance]
 ```
+
+### PinchTab Setup
+
+PinchTab runs as a Docker container via the master `docker-compose.yml`:
+
+```bash
+docker compose up pinchtab -d
+curl http://localhost:9867/health
+```
+
+OpenClaw plugin config:
+```json
+{
+  "plugins": {
+    "entries": {
+      "pinchtab": {
+        "enabled": true,
+        "config": {
+          "baseUrl": "http://localhost:9867",
+          "token": "${PINCHTAB_TOKEN}",
+          "timeout": 30000
+        }
+      }
+    }
+  }
+}
+```
+
+See `integrations/pinchtab/README.md` for full setup details.
+
+### Token Savings Estimate
+
+| Scenario | Playwright | PinchTab | Savings |
+|----------|-----------|----------|---------|
+| Extract pricing page | ~5,000 tokens | ~800 tokens | 84% |
+| Read competitor blog | ~8,000 tokens | ~1,200 tokens | 85% |
+| SERP analysis (10 results) | ~12,000 tokens | ~2,000 tokens | 83% |
+| **Daily total (all agents)** | **~60,000 tokens** | **~20,000 tokens** | **~40,000 saved** |
 
 ---
 
@@ -143,10 +183,11 @@ curl -X POST "https://api.apify.com/v2/acts/apify~google-maps-scraper/runs" \
 
 ## Budget Controls
 
-| Agent | Browser Actions/Day | Apify Runs/Day | Notes |
-|-------|-------------------|----------------|-------|
-| SCOUT | 50 | 10 | Heavy research |
-| ORACLE | 30 | 5 | Competitive monitoring |
-| RANKER | 20 | 5 | SERP analysis |
-| HERALD | 10 | 2 | Social research |
-| Others | 0 | 0 | No browser access |
+| Agent | PinchTab Actions/Day | Playwright Actions/Day | Apify Runs/Day | Notes |
+|-------|---------------------|----------------------|----------------|-------|
+| SCOUT | 40 | 10 | 10 | PinchTab for text, Playwright for forms |
+| ORACLE | 25 | 5 | 5 | PinchTab for monitoring |
+| RANKER | 15 | 5 | 5 | PinchTab for SERP text |
+| SENDER | 5 | 0 | 0 | PinchTab for Instantly dashboard |
+| HERALD | 5 | 5 | 2 | Playwright for social screenshots |
+| Others | 0 | 0 | 0 | No browser access |
